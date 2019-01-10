@@ -153,10 +153,16 @@ void loop() {
     }
   }
 
-  if (event.orientation.z >= 40) {
+  if (event.orientation.z >= 20) {
     permaStop = true;
   } 
-  if (event.orientation.y >= 40) {
+  if (event.orientation.z <= -20) {
+    permaStop = true;
+  }
+  if (event.orientation.y >= 20) {
+    permaStop = true;
+  }
+  if (event.orientation.y <= -20) {
     permaStop = true;
   }
 
