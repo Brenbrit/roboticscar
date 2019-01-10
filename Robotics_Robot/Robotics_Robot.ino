@@ -49,12 +49,12 @@ bool permaStop = false;
 int stopCounter = 0;
 
 //this is used for the sensor - only output once every bnoi times
-//int bnoCounter = 0;
-//int bnoi = 1;
+int bnoCounter = 0;
+int bnoi = 10;
 
 //this is used for the distance outputting - only output every distancei times
-//int distanceCounter = 0;
-//int distancei = 1;
+int distanceCounter = 0;
+int distancei = 5;
 
 //we don't want the robot to start as soon as you plug it in
 int startPin = 4;
@@ -123,17 +123,17 @@ void loop() {
   if (distance <= maxDistance && distance >= minDistance) {
     
     //output the distance to the serial port. Maybe comment out for application
-    //if (distanceCounter == 0) {
+    if (distanceCounter == 0) {
       Serial.print(distance);
       Serial.println("cm");
-      //distance++;
-    //} else {
-      //if (distanceCounter == distancei) {
-        //distanceCounter = 0;
-      //} else {
-        //distanceCounter++;
-      //}
-    //}
+      distance++;
+    } else {
+      if (distanceCounter == distancei) {
+        distanceCounter = 0;
+      } else {
+        distanceCounter++;
+      }
+    }
     
     //for the stop part
     if (distance <= 20) {
@@ -149,7 +149,7 @@ void loop() {
   sensors_event_t event;
   bno.getEvent(&event);
   
-  //if (bnoCounter == 0) {
+  if (bnoCounter == 0) {
     //output the sensor data for the car's orientation every 10th time
     Serial.print("X");
     Serial.print(event.orientation.x, 4);
@@ -157,14 +157,14 @@ void loop() {
     Serial.print(event.orientation.y, 4);
     Serial.print("\tZ");
     Serial.println(event.orientation.z, 4);
-    //bnoCounter++;
-  //} else {
-    //if (bnoCounter == bnoi) {
-      //bnoCounter = 0;
-    //} else {
-      //bnoCounter++;
-    //}
-  //}
+    bnoCounter++;
+  } else {
+    if (bnoCounter == bnoi) {
+      bnoCounter = 0;
+    } else {
+      bnoCounter++;
+    }
+  }
 
   if (event.orientation.z >= 20) {
     permaStop = true;
