@@ -106,16 +106,13 @@ void loop() {
   pinMode(ultraPin, OUTPUT);
   digitalWrite(ultraPin, LOW);
   delayMicroseconds(2);
-  
   //ultra is still in trig mode, send the signal
   digitalWrite(ultraPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(ultraPin, LOW);
-  
   //set the ultraPin to sensor mode, read
   pinMode(ultraPin, INPUT);
   duration = pulseIn(ultraPin, HIGH);
-  
   //to figure out the distance, we use (0.0343/2) for the speed of sound and half the time it took our sound to be sent out and return
   distance = duration*0.01715;
   
@@ -133,6 +130,7 @@ void loop() {
       } else {
         distanceCounter++;
       }
+      
     }
     
     //for the stop part
@@ -166,21 +164,5 @@ void loop() {
     }
   }
 
-  if (event.orientation.z >= 20) {
-    permaStop = true;
-  } 
-  if (event.orientation.z <= -20) {
-    permaStop = true;
-  }
-  if (event.orientation.y >= 20) {
-    permaStop = true;
-  }
-  if (event.orientation.y <= -20) {
-    permaStop = true;
-  }
-
-  //if we don't delay this loop, the sensor will constantly output 7 or 8 cm. do not do not remove.
-  //what is life without some spice?
-  //delay(10);
 
 }
