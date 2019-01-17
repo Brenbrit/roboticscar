@@ -64,6 +64,7 @@ bool delayStart = true;
 int speed1 = 255;
 int speed2 = 255;
 
+int start = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -79,6 +80,7 @@ void setup() {
   Serial.println("bno beginning completed.");
 
   Serial.println("Finished setup");
+  start = millis();
 }
 
 
@@ -103,6 +105,9 @@ void loop() {
     }
   }
 
+  if ((millis() - start) >= 1000) {
+    permaStop 
+  }
   //for the sensor
   //bno.setExtCrystalUse(true);
   

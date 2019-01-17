@@ -9,8 +9,8 @@
 //set up some variables first
 
 //the offsets for the motors. either 1 or -1
-const int offsetA = -1;
-const int offsetB = -1;
+const int offsetA = 1;
+const int offsetB = 1;
 
 //pins for all motor inputs. That's a lot, right?!?!?!?!
 //please ignore the fact that they're all out of order.
@@ -23,9 +23,9 @@ const int offsetB = -1;
 #define PWMB 5
 
 //the driver side motor
-Motor motor1 = Motor(AIN1, AIN2, PWMA, offsetA, STBY);
+Motor motor2 = Motor(AIN1, AIN2, PWMA, offsetA, STBY);
 //the passenger side motor
-Motor motor2 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
+Motor motor1 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
 
 //for the blue sensor chip
 #define BNO055_SAMPLERATE_DELAY_MS (100)
@@ -37,8 +37,8 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 const int ultraPin = 12;
 
 //the next vars are used in the distance detection
-const long maxDistance = 98.4;
-const long minDistance = 5.5;
+const float maxDistance = 98.4f;
+const float minDistance = 5.5f;
 
 //this is used for the sensor - only output once every bnoi times. set to -1 for no printing.
 int bnoCounter = 0;
@@ -64,81 +64,37 @@ long idealDirection = 0;
 //the step that we are on.
 int phase = 0;
 
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(killPin, INPUT);
-
-  
-  //try to begin the bno sensor
-  Serial.println("beginning the bno");
-  bno.begin();
-  Serial.println("bno began. setting crystal now");
-  bno.setExtCrystalUse(true);
-  Serial.println("bno beginning completed.");
-
-  Serial.println("Finished setup");
-  phase = 1;
-}
+int endTime = 0;
 
 
+//this function converts two variables into real motor movement. both speeds are from 0-255
+void setMotors(int driverSpeed, int passSpeed, boolean errorCorrection) {
 
-void loop() {
-  
-  //set the default driving speed to 0.
-  int driverSpeed = 0;
-  int passSpeed = 0;
-
-  doPhase(phase);
-
-
-  //the last thing we will do in the loop function is set the wheels to move however fast they're supposed to go.
-  setMotors(driverSpeed, passSpeed);
-}
-
-
-
-void doPhase(int phase) {
-  if (phase == 1) {
-    phase1();
-  }
-  if (phase == 2) {
-    phase2();
-  }
-}
-
-
-void phase1() {
-  beep(250,4);
-}
-
-
-
-
-//for using the cute little beeper plugged into pin 3
-void beep(int duration, int count) {
-  int i = 0;
-  int startTime = millis();
-  while (i < count) {
-    if ((startTime + duration) > millis()) {
-    digitalWrite(beeperPin, HIGH);
-    delay(3);
-    digitalWrite(beeperPin, LOW);
-    delay(3);
+  if (errorCorrection) {
+    //finally, set the motors to their correct speeds.
+    sensors_event_t event;
+    bno.getEvent(&event);
+    if (event.orientation.x < 180) {
+      //we're turned perfectly or to the right
+     driverSpeed = round(255 - ( 10 * event.orientation.x));
+      passSpeed = 255;
     } else {
-      if (i != (count-1)) {
-        delay (duration);
-      }
-      startTime = millis();
-      i++;
+      //we're turned at least a little to the left
+      driverSpeed = 255;
+      passSpeed = round(255 + ( 10 * (event.orientation.x - 360 )));
    }
   }
+  
+  motor1.drive(driverSpeed);
+  motor2.drive(passSpeed);
 }
+
+
 
 
 //for using the ultrasonic distance sensor
 //assumes the ultraPin is set to some integer that can be understood
-long getDistanceIn() {
+float getDistanceIn() {
 
   //variables we will use for the calculating
   long duration;
@@ -178,26 +134,90 @@ long getDistanceIn() {
 
 
 
-//this function converts two variables into real motor movement. both speeds are from 0-255
-void setMotors(int driverSpeed, int passSpeed) {
-  //before we go setting the motors, let's check if the kill switch is put in.
-  if (digitalRead(killPin) == HIGH) {
-    
-    //ok, we read it once. We will do it two more times to make absolutely sure this is what's supposed to happen.
-    if (digitalRead(killPin) == HIGH) {
-      if (digitalRead(killPin) == HIGH) {
-        
-        //the pin is probably in. Don't run the motors.
-        driverSpeed = 0;
-        passSpeed = 0;
-        
-      } //end third killPin read
-    } //end second killPin read
-  } //end first killPin read
+void setup() {
+  Serial.begin(9600);
+  pinMode(killPin, INPUT);
 
-  //finally, set the motors to their correct speeds.
-  motor1.drive(driverSpeed);
-  motor2.drive(passSpeed);
+  
+  //try to begin the bno sensor
+  Serial.println("beginning the bno");
+  bno.begin();
+  Serial.println("bno began. setting crystal now");
+  bno.setExtCrystalUse(true);
+  Serial.println("bno beginning completed.");
+
+  Serial.println("Finished setup");
+  phase = 1;
+}
+
+
+
+//for using the cute little beeper plugged into pin 3
+void beep(int duration, int count) {
+  int i = 0;
+  int startTime = millis();
+  while (i < count) {
+    if ((startTime + duration) > millis()) {
+    digitalWrite(beeperPin, HIGH);
+    delay(3);
+    digitalWrite(beeperPin, LOW);
+    delay(3);
+    } else {
+      if (i != (count-1)) {
+        delay (duration);
+      }
+      startTime = millis();
+      i++;
+   }
+  }
+}
+
+
+
+void incrementPhase() {
+  phase++;
+  endTime = millis();
+}
+
+
+void phase1() {
+  beep(250,4);
+  incrementPhase();
+}
+
+
+void phase2() {
+  setMotors(255,255,true);
+  Serial.println(int(getDistanceIn));
+  if (getDistanceIn() >= 17.5f) {
+    incrementPhase();
+  }
+}
+
+void phase3() {
+  motor1.brake();
+  motor2.brake();
+  delay(10000);
+}
+
+void phase4() {
+  if ((millis() - endTime) >= 1000) {
+    setMotors(-255,255,false);
+  } else{
+    setMotors(255,-255, false);
+  }
+  if ((millis() - endTime) >= 2000) {
+    //incrementPhase();
+    motor1.brake();
+    motor2.brake();
+  }
+}
+
+void phase5() {
+  setMotors(0,0,true);
+  if ((millis() - endTime) >= 1000) {
+    incrementPhase();
+  }
 }
 
 
@@ -215,16 +235,6 @@ long getBetterX() {
   sensors_event_t event;
   bno.getEvent(&event);
   long x = event.orientation.x;
-  if (idealDirection > 180) {
-    //x - ideal for every real measurement between ideal and ideal-180
-    if (x <= idealDirection && x >= (idealDirection-180)) {
-      return(x-idealDirection);
-    }
-    //
-    if (x-idealDirection < 0) {
-      return(
-    }
-  }
 }
 
 //returns the robot's y rotation
@@ -241,4 +251,48 @@ long getZ() {
   bno.getEvent(&event);
   long z = event.orientation.z;
   return z;
+}
+
+
+
+void doPhase(int phase) {
+  if (phase == 1) {
+    phase1();
+  }
+  if (phase == 2) {
+    phase2();
+  }
+  if (phase == 3) {
+    phase3();
+  }
+  if (phase == 4) {
+    phase4();
+  }
+  if (phase == 5) {
+    phase5();
+  }
+}
+
+
+
+void loop() {
+  
+  //set the default driving speed to 0.
+  int driverSpeed = 0;
+  int passSpeed = 0;
+
+  doPhase(phase);
+
+  Serial.println(phase);
+
+  if (digitalRead(killPin) == HIGH) {
+    
+    driverSpeed = 0;
+    passSpeed = 0;
+
+    setMotors(0,0,false);
+    delay(5);
+  } //end first killPin read
+
+
 }
