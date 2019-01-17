@@ -51,12 +51,18 @@ int distancei = 50;
 //we don't want the robot to start as soon as you plug it in
 int killPin = 4;
 
+//for the beeper
+int beeperPin = 3;
+
 //the globals for driving speed
 int driverSpeed = 0;
 int passSpeed = 0;
 
 //for the math we do to figure out how to turn.
 long idealDirection = 0;
+
+//the step that we are on.
+int phase = 0;
 
 
 void setup() {
@@ -72,6 +78,7 @@ void setup() {
   Serial.println("bno beginning completed.");
 
   Serial.println("Finished setup");
+  phase = 1;
 }
 
 
@@ -82,12 +89,51 @@ void loop() {
   int driverSpeed = 0;
   int passSpeed = 0;
 
+  doPhase(phase);
+
 
   //the last thing we will do in the loop function is set the wheels to move however fast they're supposed to go.
   setMotors(driverSpeed, passSpeed);
 }
 
 
+
+void doPhase(int phase) {
+  if (phase == 1) {
+    phase1();
+  }
+  if (phase == 2) {
+    phase2();
+  }
+}
+
+
+void phase1() {
+  beep(250,4);
+}
+
+
+
+
+//for using the cute little beeper plugged into pin 3
+void beep(int duration, int count) {
+  int i = 0;
+  int startTime = millis();
+  while (i < count) {
+    if ((startTime + duration) > millis()) {
+    digitalWrite(beeperPin, HIGH);
+    delay(3);
+    digitalWrite(beeperPin, LOW);
+    delay(3);
+    } else {
+      if (i != (count-1)) {
+        delay (duration);
+      }
+      startTime = millis();
+      i++;
+   }
+  }
+}
 
 
 //for using the ultrasonic distance sensor
@@ -196,4 +242,3 @@ long getZ() {
   long z = event.orientation.z;
   return z;
 }
-
