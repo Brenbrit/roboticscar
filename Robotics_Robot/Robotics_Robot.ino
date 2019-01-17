@@ -37,8 +37,8 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 const int ultraPin = 12;
 
 //the next vars are used in the distance detection
-const long maxDistance = 250;
-const long minDistance = 14;
+const long maxDistance = 98.4;
+const long minDistance = 5.5;
 
 //if this ever gets to be 3, the bot will stop.
 int stopCounter = 0;
