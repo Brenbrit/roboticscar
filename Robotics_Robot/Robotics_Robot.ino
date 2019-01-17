@@ -40,9 +40,6 @@ const int ultraPin = 12;
 const long maxDistance = 98.4;
 const long minDistance = 5.5;
 
-//if this ever gets to be 3, the bot will stop.
-int stopCounter = 0;
-
 //this is used for the sensor - only output once every bnoi times. set to -1 for no printing.
 int bnoCounter = 0;
 int bnoi = 50;
@@ -53,6 +50,13 @@ int distancei = 50;
 
 //we don't want the robot to start as soon as you plug it in
 int killPin = 4;
+
+//the globals for driving speed
+int driverSpeed = 0;
+int passSpeed = 0;
+
+//for the math we do to figure out how to turn.
+long idealDirection = 0;
 
 
 void setup() {
@@ -157,19 +161,39 @@ long getX() {
   sensors_event_t event;
   bno.getEvent(&event);
   long x = event.orientation.x;
+  return x;
+}
+
+long getBetterX() {
+  long betterX;
+  sensors_event_t event;
+  bno.getEvent(&event);
+  long x = event.orientation.x;
+  if (idealDirection > 180) {
+    //x - ideal for every real measurement between ideal and ideal-180
+    if (x <= idealDirection && x >= (idealDirection-180)) {
+      return(x-idealDirection);
+    }
+    //
+    if (x-idealDirection < 0) {
+      return(
+    }
+  }
 }
 
 //returns the robot's y rotation
 long getY() {
   sensors_event_t event;
   bno.getEvent(&event);
-  long x = event.orientation.y;
+  long y = event.orientation.y;
+  return y;
 }
 
 //returns the robot's z rotation
 long getZ() {
   sensors_event_t event;
   bno.getEvent(&event);
-  long x = event.orientation.z;
+  long z = event.orientation.z;
+  return z;
 }
 
