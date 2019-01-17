@@ -37,34 +37,27 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 const int ultraPin = 12;
 
 //the next vars are used in the distance detection
-long duration;
-int distance;
-const int maxDistance = 250;
-const int minDistance = 14;
-
-//temporary. If true, the machine will stop moving completely until reset.
-bool permaStop = false;
+const long maxDistance = 250;
+const long minDistance = 14;
 
 //if this ever gets to be 3, the bot will stop.
 int stopCounter = 0;
 
-//this is used for the sensor - only output once every bnoi times
+//this is used for the sensor - only output once every bnoi times. set to -1 for no printing.
 int bnoCounter = 0;
-int bnoi = 10;
+int bnoi = 50;
 
-//this is used for the distance outputting - only output every distancei times
+//this is used for the distance outputting - only output every distancei times. set to -1 for no printing.
 int distanceCounter = 0;
-int distancei = 5;
+int distancei = 50;
 
 //we don't want the robot to start as soon as you plug it in
-int startPin = 4;
-bool delayStart = true;
+int killPin = 4;
 
 
 void setup() {
   Serial.begin(9600);
-  digitalWrite(13, LOW);
-  pinMode(startPin, INPUT);
+  pinMode(killPin, INPUT);
 
   
   //try to begin the bno sensor
@@ -80,27 +73,26 @@ void setup() {
 
 
 void loop() {
+  
+  //set the default driving speed to 0.
+  int driverSpeed = 0;
+  int passSpeed = 0;
 
-  if (permaStop) {
-    motor1.brake();
-    motor2.brake();
-  } else {
-    if (!delayStart) {
-      //the start pin has been released. we're free!
-      motor1.drive(255);
-      motor2.drive(255);
-    } else {
-      //the start pin is still in. Let's check
-      if (digitalRead(startPin) == HIGH) {
-        //yep, it's still in there.
-      } else {
-        delayStart = false;
-      }
-    }
-  }
 
-  //for the sensor
-  //bno.setExtCrystalUse(true);
+  //the last thing we will do in the loop function is set the wheels to move however fast they're supposed to go.
+  setMotors(driverSpeed, passSpeed);
+}
+
+
+
+
+//for using the ultrasonic distance sensor
+//assumes the ultraPin is set to some integer that can be understood
+long getDistanceIn() {
+
+  //variables we will use for the calculating
+  long duration;
+  long distance;
   
   //set ultra to trig mode, write LOW
   pinMode(ultraPin, OUTPUT);
@@ -113,56 +105,71 @@ void loop() {
   //set the ultraPin to sensor mode, read
   pinMode(ultraPin, INPUT);
   duration = pulseIn(ultraPin, HIGH);
-  //to figure out the distance, we use (0.0343/2) for the speed of sound and half the time it took our sound to be sent out and return
-  distance = duration*0.01715;
-  
-  // Prints the distance if it's less than or equal to the maximum distance defined by maxDistance
-  if (distance <= maxDistance && distance >= minDistance) {
-    
-    //output the distance to the serial port. Maybe comment out for application
-    if (distanceCounter == 0) {
-      Serial.print(distance);
-      Serial.println("cm");
-      distance++;
-    } else {
-      if (distanceCounter == distancei) {
-        distanceCounter = 0;
-      } else {
-        distanceCounter++;
-      }
-      
-    }
-    
-    //for the stop part
-    if (distance <= 20) {
-      stopCounter++;
-      if (stopCounter >= 3) {
-        permaStop = true;
-        Serial.println("stopped");
-      }
-    }
-    
-  }
+  //to figure out the distance, we use (0.0133/2) for the speed of sound and half the time it took our sound to be sent out and return
+  distance = duration*0.00665;
 
+  //only use if the distance is reasonable
+  if (distance >= minDistance && distance <= maxDistance) {
+    return distance;
+
+    if (distanceCounter == distancei) {
+      //the time has come! We will print the distance to the console
+      Serial.print(distance);
+      Serial.println("in");
+      distanceCounter == 0;
+      
+    } else {
+      distanceCounter++;
+    }
+    
+  } //end reasonable distance check
+  
+} //end get distance
+
+
+
+//this function converts two variables into real motor movement. both speeds are from 0-255
+void setMotors(int driverSpeed, int passSpeed) {
+  //before we go setting the motors, let's check if the kill switch is put in.
+  if (digitalRead(killPin) == HIGH) {
+    
+    //ok, we read it once. We will do it two more times to make absolutely sure this is what's supposed to happen.
+    if (digitalRead(killPin) == HIGH) {
+      if (digitalRead(killPin) == HIGH) {
+        
+        //the pin is probably in. Don't run the motors.
+        driverSpeed = 0;
+        passSpeed = 0;
+        
+      } //end third killPin read
+    } //end second killPin read
+  } //end first killPin read
+
+  //finally, set the motors to their correct speeds.
+  motor1.drive(driverSpeed);
+  motor2.drive(passSpeed);
+}
+
+
+
+//this is for getting the absolute x coord
+long getX() {
   sensors_event_t event;
   bno.getEvent(&event);
-  
-  if (bnoCounter == 0) {
-    //output the sensor data for the car's orientation every 10th time
-    Serial.print("X");
-    Serial.print(event.orientation.x, 4);
-    Serial.print("\tY");
-    Serial.print(event.orientation.y, 4);
-    Serial.print("\tZ");
-    Serial.println(event.orientation.z, 4);
-    bnoCounter++;
-  } else {
-    if (bnoCounter == bnoi) {
-      bnoCounter = 0;
-    } else {
-      bnoCounter++;
-    }
-  }
-
-
+  long x = event.orientation.x;
 }
+
+//returns the robot's y rotation
+long getY() {
+  sensors_event_t event;
+  bno.getEvent(&event);
+  long x = event.orientation.y;
+}
+
+//returns the robot's z rotation
+long getZ() {
+  sensors_event_t event;
+  bno.getEvent(&event);
+  long x = event.orientation.z;
+}
+
