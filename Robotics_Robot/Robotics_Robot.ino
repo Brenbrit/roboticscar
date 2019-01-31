@@ -37,8 +37,8 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 const int ultraPin = 12;
 
 //the next vars are used in the distance detection
-const float maxDistance = 98.4f;
-const float minDistance = 5.5f;
+const float maxDistance = 100.0;
+const float minDistance = 2.0;
 
 //this is used for the sensor - only output once every bnoi times. set to -1 for no printing.
 int bnoCounter = 0;
@@ -46,7 +46,8 @@ int bnoi = 50;
 
 //this is used for the distance outputting - only output every distancei times. set to -1 for no printing.
 int distanceCounter = 0;
-int distancei = 50;
+int distancei = 5000;
+float lastGoodDistance = 10.0;
 
 //we don't want the robot to start as soon as you plug it in
 int killPin = 4;
@@ -97,8 +98,8 @@ void setMotors(int driverSpeed, int passSpeed, boolean errorCorrection) {
 float getDistanceIn() {
 
   //variables we will use for the calculating
-  long duration;
-  long distance;
+  float duration;
+  float distance;
   
   //set ultra to trig mode, write LOW
   pinMode(ultraPin, OUTPUT);
@@ -113,20 +114,30 @@ float getDistanceIn() {
   duration = pulseIn(ultraPin, HIGH);
   //to figure out the distance, we use (0.0133/2) for the speed of sound and half the time it took our sound to be sent out and return
   distance = duration*0.00665;
+  Serial.print(distance);
+  Serial.println(" in before comparison");
+
+  Serial.print(maxDistance);
+  Serial.println(" is the max distance.");
+
+  Serial.print(minDistance);
+  Serial.println(" is the minimum distance");
 
   //only use if the distance is reasonable
-  if (distance >= minDistance && distance <= maxDistance) {
-    return distance;
-
-    if (distanceCounter == distancei) {
-      //the time has come! We will print the distance to the console
-      Serial.print(distance);
-      Serial.println("in");
-      distanceCounter == 0;
-      
-    } else {
-      distanceCounter++;
-    }
+  if (distance > minDistance) {
+      if(distance < maxDistance) {
+  
+        if (distanceCounter == distancei && abs(distance - lastGoodDistance) < 3.0) {
+          //the time has come! We will print the distance to the console
+          //lol no
+          distanceCounter == 0;
+          return distance;
+          delay(10);
+          
+        } else {
+          distanceCounter++;
+        }
+      }
     
   } //end reasonable distance check
   
@@ -181,8 +192,11 @@ void incrementPhase() {
 
 
 void phase1() {
-  beep(250,4);
-  incrementPhase();
+  float x = getDistanceIn();
+  Serial.print(x);
+  Serial.println(" returned from the distance function");
+  Serial.println();
+  delay(1000);
 }
 
 
@@ -282,8 +296,6 @@ void loop() {
   int passSpeed = 0;
 
   doPhase(phase);
-
-  Serial.println(phase);
 
   if (digitalRead(killPin) == HIGH) {
     
