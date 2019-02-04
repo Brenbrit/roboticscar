@@ -69,10 +69,6 @@ int endTime = 0;
 
 
 void phase1() {
-  if (getDistanceIn() >= 18) {
-    setMotorsBasic(0,0);
-    incrementPhase();
-  } else {
-    setMotorsBasic((255 - (10*(18 -getDistanceIn()))),(255-(10*(18-getDistanceIn()))));
-  }
+  turn(90);
+  incrementPhase();
 }

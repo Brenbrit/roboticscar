@@ -11,9 +11,8 @@ void setup() {
   Serial.println("bno began. setting crystal now");
   bno.setExtCrystalUse(true);
   Serial.println("bno beginning completed.");
-
+  incrementPhase();
   Serial.println("Finished setup");
-  phase = 1;
 }
 
 void loop() {
