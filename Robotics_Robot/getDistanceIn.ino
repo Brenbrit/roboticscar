@@ -15,12 +15,13 @@ int getDistanceIn() {
   duration = pulseIn(echoPin, HIGH);
   // Calculating the distance
   distance= duration*0.0133/2;
-  // Prints the distance on the Serial Monitor
-  Serial.print(distance);
-  Serial.print("raw, ");
+  
+  
   if (distance < maxDistance && distance > minDistance) {
-   Serial.print(distance);
-   Serial.println("reported");
-   return(distance); 
+    //distance meets the requirements to be valid, but is it really? We'll reject any change of >5in.
+    if (abs(lastGoodDistance - distance) <= 5) {
+      lastGoodDistance = distance;
+      return(distance);
+    }
   }
-  }
+}

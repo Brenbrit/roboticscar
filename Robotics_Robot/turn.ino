@@ -3,6 +3,12 @@ void turn(int degree) {
   while (turning) {
     int variation = getVariation(degree);
     int motorSpeed = abs(variation*10);
+    if (motorSpeed > 255) {
+      motorSpeed = 255;
+    }
+    if (motorSpeed < 30) {
+      motorSpeed = 30;
+    }
     
     if (variation > 0) {
       //turn left

@@ -5,9 +5,9 @@ void beep(int duration, int count) {
   while (i < count) {
     if ((startTime + duration) > millis()) {
     digitalWrite(beeperPin, HIGH);
-    delay(3);
+    delay(1);
     digitalWrite(beeperPin, LOW);
-    delay(3);
+    delay(1);
     } else {
       if (i != (count-1)) {
         delay (duration);
