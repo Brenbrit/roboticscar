@@ -1,7 +1,7 @@
 void setup() {
   Serial.begin(9600);
   pinMode(killPin, INPUT);
-
+  setUpDisplay();
   
   //try to begin the bno sensor
   Serial.println("beginning the bno");
@@ -16,6 +16,7 @@ void setup() {
   lastGoodDistance = ((getDistanceIn() + getDistanceIn() + getDistanceIn())/3);
   lastGoodDistance = 6;
   Serial.println(lastGoodDistance);
+  pinMode(2,OUTPUT);
   
   phase = 1;
   Serial.print("Finished setup, starting phase ");

@@ -1,20 +1,12 @@
-//the first time we go forward
+//the first time we go forward. should be 18in
 void phase2() {
-  int distance = getDistanceIn();
-  if (distance == 0) {
-    return;
-  }
-  if (distance < 17) {
-    setMotors(155,155,0);
-    x = 0;
-  } else {
-    x++;
-  }
-  
-  if (x >= 2) {
-    //the distance has been greater than or equal to 18 for 3 cycles now
-    setMotors(0,0,0);
-    delay(100);
+  //driveTo function.
+  //goal distance: 18
+  //angle: 0
+  //base speed: 150
+  //terminal speed: 50
+  //slow distance: 9
+  if (driveTo(25,0,120,40,25)) {
     incrementPhase();
   }
 }

@@ -3,6 +3,10 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 #include <SparkFun_TB6612.h>
+#include "SevSeg.h"
+
+
+SevSeg sevseg; 
 
 
 
@@ -10,7 +14,7 @@
 
 //the offsets for the motors. either 1 or -1
 const int offsetA = 1;
-const int offsetB = 1;
+const int offsetB = -1;
 
 const int trigPin = 4;
 const int echoPin = 12;
