@@ -1,6 +1,5 @@
 void setup() {
   Serial.begin(9600);
-  pinMode(killPin, INPUT);
   setUpDisplay();
   
   //try to begin the bno sensor
@@ -13,7 +12,7 @@ void setup() {
   bno.setExtCrystalUse(true);
   Serial.println("bno beginning completed.");
   Serial.print("finding first good distance, it is ");
-  lastGoodDistance = ((getDistanceIn() + getDistanceIn() + getDistanceIn())/3);
+  //lastGoodDistance = ((getDistanceIn() + getDistanceIn() + getDistanceIn())/3);
   lastGoodDistance = 6;
   Serial.println(lastGoodDistance);
   pinMode(2,OUTPUT);
