@@ -50,7 +50,7 @@ int bnoi = 50;
 //this is used for the distance outputting - only output every distancei times. set to -1 for no printing.
 int distanceCounter = 0;
 int distancei = 0;
-int lastGoodDistance;
+long lastGoodDistance;
 
 //we don't want the robot to start as soon as you plug it in
 int killPin;

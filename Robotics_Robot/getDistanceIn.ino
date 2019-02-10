@@ -1,7 +1,7 @@
 int getDistanceIn() {
   
   long duration;
-  int distance;
+  long distance;
   
   
   // Clears the trigPin
@@ -17,15 +17,16 @@ int getDistanceIn() {
   distance= duration*0.00665;
   
   
-  if (distance < maxDistance && distance > minDistance) {
+  if (int(distance) <= maxDistance && int(distance) >= minDistance) {
     //distance meets the requirements to be valid, but is it really? We'll reject any change of >5in.
-    if (abs(lastGoodDistance - distance) <= 5) {
+    if (abs(lastGoodDistance - distance) <= long(5)) {
       lastGoodDistance = distance;
       digitalWrite(2,LOW);
-      return(distance);
+      return(int(distance));
     }
   }
   //looks like we haven't reached an answer. let's recurse
   digitalWrite(2,HIGH);
+  delay(20);
   return(getDistanceIn());
 }

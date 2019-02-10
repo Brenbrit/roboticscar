@@ -4,7 +4,6 @@
 //finally, we need to know the distance to start slowing down. this is linear
 
 bool driveTo(int goalDistance, int angle, int baseSpeed, int terminalSpeed, int slowDistance) {
-  //obvoisly, we need to know how far we are from the nearest thing. we'll start over if we catch a 0 slackin
   int distance = getDistanceIn();
   disp(distance);
   

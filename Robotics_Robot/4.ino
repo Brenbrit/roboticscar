@@ -2,20 +2,11 @@
 //the first time we go forward
 void phase4() {
   int distance = getDistanceIn();
-  if (distance == 0) {
-    return;
-  }
-  if (distance < 35) {
-    setMotors(175,175,90);
-    x = 0;
-  } else {
-    x++;
-  }
-  
-  if (x >= 1) {
-    //the distance has been greater than or equal to 37 for 3 cycles now
-    setMotors(0,0,0);
-    delay(100);
+  disp(distance);
+  if (distance >= 36) {
+    setMotors(0,0,90);
     incrementPhase();
+  } else {
+    setMotors(100,100,90);
   }
 }

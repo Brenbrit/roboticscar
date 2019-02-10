@@ -6,8 +6,8 @@ void turn(int degree) {
     if (motorSpeed > 255) {
       motorSpeed = 255;
     }
-    if (motorSpeed < 45) {
-      motorSpeed = 45;
+    if (motorSpeed < 35) {
+      motorSpeed = 35;
     }
     
     if (variation > 0) {
