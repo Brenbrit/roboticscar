@@ -9,11 +9,22 @@ void setMotors(int driverSpeed, int passSpeed, int perfectX) {
     motor2.brake();
     return;
   }
-  if (variation > 0) {
-    driverSpeed = (driverSpeed - (10*variation));
-  }
-  if (variation < 0) {
-    passSpeed = (passSpeed + (10*variation));
+  if (driverSpeed > 0 && passSpeed > 0) {
+    //we're going forward
+    if (variation > 0) {
+      driverSpeed = (driverSpeed - (10*variation));
+    }
+    if (variation < 0) {
+      passSpeed = (passSpeed + (10*variation));
+    }
+  } else {
+    //we're going backward. More difficult(?) error correction.
+    if (variation < 0) {
+      driverSpeed = (driverSpeed - (10*variation));
+    }
+    if (variation > 0) {
+      passSpeed = (passSpeed + (10*variation));
+    }
   }
   
   setMotorsBasic(driverSpeed, passSpeed);
