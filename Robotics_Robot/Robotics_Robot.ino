@@ -51,6 +51,7 @@ int bnoi = 50;
 int distanceCounter = 0;
 int distancei = 0;
 long lastGoodDistance;
+int lastGoodTime;
 
 //we don't want the robot to start as soon as you plug it in
 int killPin;
@@ -62,12 +63,18 @@ int beeperPin = 3;
 int driverSpeed = 0;
 int passSpeed = 0;
 
-//for the math we do to figure out how to turn.
-long idealDirection = 0;
-
 //the step that we are on.
 int phase = 0;
 
 int endTime = 0;
 
 int x = 0;
+
+//for recursion problems
+int startRec;
+bool recursing = false;
+
+//for the bad phases
+int firstDistance;
+int firstDistanceTime;
+int timePerIn;

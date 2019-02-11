@@ -22,11 +22,15 @@ int getDistanceIn() {
     if (abs(lastGoodDistance - distance) <= long(5)) {
       lastGoodDistance = distance;
       digitalWrite(2,LOW);
+      lastGoodTime = millis();
       return(int(distance));
     }
   }
   //looks like we haven't reached an answer. let's recurse
   digitalWrite(2,HIGH);
+  if (millis() - lastGoodTime > 200) {
+    return(lastGoodDistance);
+  }
   delay(20);
   return(getDistanceIn());
 }

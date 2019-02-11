@@ -1,6 +1,9 @@
-//turn left to move past the 2nd set of obstacles. We need to be careful here, this relies on a single obstacle for distance.
+//drive towards the right wall.
 void phase7() {
-  turn(90);
-  lastGoodDistance = 6;
-  incrementPhase();
+  if (getDistanceIn() > 6) {
+    setMotors(-100,-100,0);
+  } else {
+    setMotors(0,0,0);
+    incrementPhase();
+  }
 }

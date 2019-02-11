@@ -1,17 +1,10 @@
 //we are driving past the second set of obstacles now
 void phase10() {
-  int distance = getDistanceIn();
-  if (distance < 37) {
-    setMotors(155,155,0);
-    x = 0;
+  //endTime is the time that this phase started
+  if (millis() < (endTime + (timePerIn * 11))) {
+    setMotors(100,100,90);
   } else {
-    x++;
-  }
-  
-  if (x >= 3) {
-    //the distance has been greater than or equal to 37 for 3 cycles now
-    setMotors(0,0,0);
-    delay(100);
+    setMotors(0,0,90);
     incrementPhase();
   }
 }

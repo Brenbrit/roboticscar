@@ -1,6 +1,10 @@
-//turn right again, we have passed the first obstacle and we're getting out of the way of the second one
+//we have the timePerIn from phase 4, use it to drive the last 14 inches.
 void phase5() {
-  turn(180);
-  lastGoodDistance = 30;
-  incrementPhase();
+  //endTime is the time that this phase started
+  if (millis() < (endTime + (timePerIn * 14))) {
+    setMotors(125,125,90);
+  } else {
+    setMotors(0,0,90);
+    incrementPhase();
+  }
 }

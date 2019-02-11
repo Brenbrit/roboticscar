@@ -2,12 +2,12 @@ void turn(int degree) {
   bool turning = true;
   while (turning) {
     int variation = getVariation(degree);
-    int motorSpeed = abs(variation*10);
+    int motorSpeed = abs(variation*4);
     if (motorSpeed > 255) {
       motorSpeed = 255;
     }
-    if (motorSpeed < 35) {
-      motorSpeed = 35;
+    if (motorSpeed < 38) {
+      motorSpeed = 38;
     }
     
     if (variation > 0) {
