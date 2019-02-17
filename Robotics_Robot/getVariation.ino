@@ -4,7 +4,12 @@ int getVariation(int ideal) {
   bno.getEvent(&event);
 
   int real = event.orientation.x;
-  Serial.println(real);
+  //Serial.print(real);
+  //Serial.print("\t");
+
+  if (abs(real) == ideal) {
+    return(0);
+  }
 
   if (ideal >= 180) {
     if (real > ideal) {

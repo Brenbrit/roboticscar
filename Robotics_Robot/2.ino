@@ -1,11 +1,9 @@
 //the first time we go forward. should be 18in
 void phase2() {
-  int distance = getDistanceIn();
-  disp(distance);
-  if (distance >= 16) {
+  if ((millis() - endTime) < 1150) {
+    setMotors(timeSpeed,timeSpeed,0);
+  } else {
     setMotors(0,0,0);
     incrementPhase();
-  } else {
-    setMotors(100,100,0);
   }
 }

@@ -3,12 +3,9 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 #include <SparkFun_TB6612.h>
-#include "SevSeg.h"
 
 
-SevSeg sevseg; 
-
-
+int timeSpeed = 150;
 
 //set up some variables first
 

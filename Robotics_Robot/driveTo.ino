@@ -5,7 +5,6 @@
 
 bool driveTo(int goalDistance, int angle, int baseSpeed, int terminalSpeed, int slowDistance) {
   int distance = getDistanceIn();
-  disp(distance);
   
   if (distance == goalDistance) {
     setMotors(0,0,angle);

@@ -1,7 +1,5 @@
 void setup() {
   Serial.begin(9600);
-  setUpDisplay();
-  
   //try to begin the bno sensor
   Serial.println("beginning the bno");
   bno.begin();
@@ -23,7 +21,6 @@ void setup() {
 }
 
 void loop() {
-
   doPhase(phase);
 
 
