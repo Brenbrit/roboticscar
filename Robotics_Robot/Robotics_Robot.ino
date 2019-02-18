@@ -9,13 +9,13 @@
 //as long as these and timeSpeed are sort of correct, the robot should work.
 int p2_31 = 1150;
 int p4_29 = 2750;
-int p7_27 = 750;
+int p7_27 = 650;
 int p9_25 = 1700;
-int p12_23 = 650;
+int p12_23 = 850;
 int p14_21 = 2175;
-int p17_19 = 800;
+int p17_19 = 250;
 
-int timeSpeed = 150;
+int timeSpeed = 125;
 
 
 

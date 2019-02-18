@@ -1,6 +1,6 @@
 void phase1() {
   //beep
   
-  //beep(50,4);
+  beep(200,4);
   incrementPhase();
 }
