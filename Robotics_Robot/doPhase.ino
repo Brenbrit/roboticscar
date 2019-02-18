@@ -9,7 +9,7 @@ void doPhase(int phase) {
     phase3();
   }
   if (phase == 4) {
-    phase4t();
+    phase4();
   }
   if (phase == 5) {
     phase5();
@@ -61,5 +61,38 @@ void doPhase(int phase) {
   }
   if (phase == 21) {
     phase21();
+  }
+  if (phase == 22) {
+    phase22();
+  }
+  if (phase == 23) {
+    phase23();
+  }
+  if (phase == 24) {
+    phase24();
+  }
+  if (phase == 25) {
+    phase25();
+  }
+  if (phase == 26) {
+    phase26();
+  }
+  if (phase == 27) {
+    phase27();
+  }
+  if (phase == 28) {
+    phase28();
+  }
+  if (phase == 29) {
+    phase29();
+  }
+  if (phase == 30) {
+    phase30();
+  }
+  if (phase == 31) {
+    phase31();
+  }
+  if (phase == 32) {
+    phase32();
   }
 }

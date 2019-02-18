@@ -5,9 +5,19 @@
 #include <SparkFun_TB6612.h>
 
 
+//EZ-EDITS
+//as long as these and timeSpeed are sort of correct, the robot should work.
+int p2_31 = 1150;
+int p4_29 = 2750;
+int p7_27 = 750;
+int p9_25 = 1700;
+int p12_23 = 650;
+int p14_21 = 2175;
+int p17_19 = 800;
+
 int timeSpeed = 150;
 
-//set up some variables first
+
 
 //the offsets for the motors. either 1 or -1
 const int offsetA = 1;

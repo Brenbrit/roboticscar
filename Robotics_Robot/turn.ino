@@ -19,10 +19,12 @@ void turn(int degree) {
       //turn right
       setMotorsBasic(motorSpeed, -motorSpeed);
     }
-    if (abs(variation) <= 4) {
-      setMotors(0,0,0);
+    if (abs(variation) <= 3) {
+      if (variation == 0) {
+        setMotors(0,0,0);
+      }
       delay(25);
-      if (abs(getVariation(degree)) <= 4) {
+      if (abs(getVariation(degree)) <= 3) {
         turning = false;
       }
     }
