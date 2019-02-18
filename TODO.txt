@@ -1,2 +1,0 @@
->have a maximum change between distance measurements so that there's no fluxuations
->get gud
