@@ -1,4 +1,4 @@
 void phase26() {
-  turn(180);
+  turn(0);
   incrementPhase();
 }

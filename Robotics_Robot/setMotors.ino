@@ -5,8 +5,7 @@ void setMotors(int driverSpeed, int passSpeed, int perfectX) {
   int variation = getVariation(perfectX);
 
   if (driverSpeed == 0 && passSpeed == 0) {
-    motor1.brake();
-    motor2.brake();
+    setMotorsBasic(0,0);
     return;
   }
   if (driverSpeed > 0 && passSpeed > 0) {
