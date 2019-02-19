@@ -1,9 +1,9 @@
 void incrementPhase() {
-  Serial.print("End of phase ");
-  Serial.print(phase);
-  Serial.print(", start of phase ");
+  //Serial.print("End of phase ");
+  //Serial.print(phase);
+  //Serial.print(", start of phase ");
   phase++;
-  Serial.println(phase);
+  //Serial.println(phase);
   endTime = millis();
 }
 

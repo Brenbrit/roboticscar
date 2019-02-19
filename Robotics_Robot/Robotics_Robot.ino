@@ -10,12 +10,12 @@
 int p2_31 = 1150;
 int p4_29 = 2750;
 int p7_27 = 650;
-int p9_25 = 1700;
-int p12_23 = 850;
-int p14_21 = 2175;
-int p17_19 = 250;
+int p9_25 = 1750;
+int p12_23 = 750;
+int p14_21 = 2000;
+int p17_19 = 800;
 
-int timeSpeed = 125;
+int timeSpeed = 146;
 
 
 
@@ -44,6 +44,7 @@ Motor motor1 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
 //for the blue sensor chip
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
+  
 
 
 //the next vars are used in the distance detection

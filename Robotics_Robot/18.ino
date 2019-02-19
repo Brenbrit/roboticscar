@@ -1,5 +1,6 @@
 void phase18() {
-  //beep
+  turn(0);
+  setMotors(0,0,0);
   beep(200,4);
   delay(6000);
   beep(200,4);
